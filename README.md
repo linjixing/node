@@ -1,6 +1,10 @@
 # node
 
-- Home [https://github.com/linjixing/node](https://github.com/linjixing/node)
+- Clone
+
+```bash
+git clone https://github.com/linjixing/node.git
+```
 
 - Init
 

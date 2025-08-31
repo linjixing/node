@@ -22,6 +22,7 @@ git clone https://github.com/linjixing/node.git
 - Variables
 
 ```bash
+UNAME="linjixing"
 CONTAINER="node"
 TAG="25.8.25"
 ```

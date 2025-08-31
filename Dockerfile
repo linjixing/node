@@ -8,7 +8,7 @@ COPY home /tmp/home
 
 RUN export DEBIAN_FRONTEND=noninteractive; \
     apt-get update; \
-    apt-get install -y ca-certificates curl wget unzip net-tools tzdata vim supervisor --no-install-recommends; \
+    apt-get install -y ca-certificates curl wget unzip net-tools tzdata vim sudo supervisor --no-install-recommends; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*; \
     ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime; \

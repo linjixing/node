@@ -1,0 +1,4 @@
+* * * * * echo "$(date +"%Y-%m-%d %H:%M:%S")" >> /tmp/heartbeat.log
+* * * * * echo "$(date +"%Y-%m-%d %H:%M:%S") $(wc -l /tmp/heartbeat.log)" >> /home/logs/heartbeat.log
+0 0 * * 0 echo "" > /tmp/heartbeat‌.log
+* * * * * la >> /tmp/la.log 2>&1 &

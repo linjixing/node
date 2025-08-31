@@ -2,9 +2,9 @@ FROM ubuntu:22.04
 
 ENV PATH=/home/bin:$PATH
 
-COPY --chown=root:root init /usr/bin/
+COPY --chown=root:root init /usr/bin/init
 
-COPY --chown=root:root home /tmp/
+COPY --chown=root:root home /tmp/home
 
 RUN export DEBIAN_FRONTEND=noninteractive; \
     apt-get update; \
@@ -16,8 +16,7 @@ RUN export DEBIAN_FRONTEND=noninteractive; \
     echo 'Asia/Shanghai' > /etc/timezone; \
     echo 'set fileencodings=utf-8,gbk,utf-16le,cp1252,iso-8859-15,ucs-bom' >> /etc/vim/vimrc; \
     echo 'set termencoding=utf-8' >> /etc/vim/vimrc; \
-    echo 'set encoding=utf-8' >> /etc/vim/vimrc; \
-    chmod +x /usr/bin/init
+    echo 'set encoding=utf-8' >> /etc/vim/vimrc
 
 ENTRYPOINT ["init"]
 

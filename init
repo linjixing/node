@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
-mv /tmp/home/{*,.*} /home/
+umask 002
+
+mv /tmp/home/* /home/ && mv /tmp/home/.rc /home/
 
 exec "$@"

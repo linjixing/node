@@ -1,0 +1,1 @@
+0 0 * * * echo `date "+%Y-%m-%d %H:%M:%S %A"` >> /tmp/day.log 2>&1

@@ -1,1 +1,2 @@
-*/5 * * * * /usr/local/bin/av
+* * * * * now >> /tmp/now.log
+0 13 * * * echo "" > /tmp/now.log

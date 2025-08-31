@@ -2,6 +2,11 @@
 
 umask 002
 
-mv /tmp/home/* /home/ && mv /tmp/home/.rc /home/
+if [ -d "/tmp/home" ]; then
+    [ -d "/home/bin" ] || mkdir /home/bin && mv /tmp/home/bin/* /home/bin/
+    [ -d "/home/conf" ] || mkdir /home/conf && mv /tmp/home/conf/* /home/conf/
+    mv /tmp/home/.rc /home/
+    rm -rf /tmp/home
+fi
 
 exec "$@"

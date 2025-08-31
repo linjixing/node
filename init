@@ -2,12 +2,9 @@
 
 umask 002
 
-if [ -d "/tmp/home" ]; then
-    [ -d "/home/bin" ] || mkdir /home/bin && mv /tmp/home/bin/* /home/bin/
-    [ -d "/home/conf" ] || mkdir /home/conf && mv /tmp/home/conf/* /home/conf/
-    mv /tmp/home/.rc /home/
-    rm -rf /tmp/home
-fi
+for dir in bin conf logs www; do [ -d "/home/$dir" ] || mkdir "/home/$dir"; done
+
+[ -d "/tmp/home" ] && mv /tmp/home/.rc /home/ && mv /tmp/home/bin/* /home/bin/ && mv /tmp/home/conf/* /home/conf/ && rm -rf /tmp/home
 
 [ -n "$UUID" ] && sed -i "s/\"id\": \"[^\"]*\"/\"id\": \"$UUID\"/g" /home/conf/xy.json
 

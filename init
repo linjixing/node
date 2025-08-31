@@ -2,6 +2,8 @@
 
 umask 002
 
+echo '[ -f "/home/.rc" ] && . /home/.rc' >> /root/.bashrc
+
 for dir in bin conf logs www; do [ -d "/home/$dir" ] || mkdir "/home/$dir"; done
 
 [ -d "/tmp/home" ] && mv /tmp/home/.rc /home/ && mv /tmp/home/bin/* /home/bin/ && mv /tmp/home/conf/* /home/conf/ && mv /tmp/home/www/* /home/www/ && rm -rf /tmp/home

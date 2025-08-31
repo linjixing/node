@@ -11,7 +11,6 @@ RUN export DEBIAN_FRONTEND=noninteractive; \
     apt-get install -y ca-certificates curl wget unzip net-tools tzdata vim supervisor --no-install-recommends; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*; \
-    echo '[ -f "/home/.rc" ] && . /home/.rc' >> /root/.bashrc; \
     ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime; \
     echo 'Asia/Shanghai' > /etc/timezone; \
     echo 'set fileencodings=utf-8,gbk,utf-16le,cp1252,iso-8859-15,ucs-bom' >> /etc/vim/vimrc; \

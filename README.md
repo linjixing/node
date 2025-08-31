@@ -19,7 +19,7 @@ git clone https://github.com/linjixing/node.git
 
 ## Docker
 
-- Variables
+### Variables
 
 ```bash
 UNAME="linjixing"
@@ -27,27 +27,33 @@ CONTAINER="node"
 TAG="25.8.25"
 ```
 
-- Make
+### Build
 
 ```bash
 docker build -t $CONTAINER:$TAG .
 ```
 
-- Run
+### Run
 
 ```bash
 docker stop $CONTAINER && docker rm $CONTAINER && \
 docker run -dit --name $CONTAINER -h $CONTAINER $CONTAINER:$TAG
 ```
 
-- Login
+### Exec
+
+```bash
+docker exec -it $CONTAINER bash
+```
+
+### Login to [Docker Hub](https://hub.docker.com/repository/docker/linjixing/node/tags)
 
 ```bash
 docker logout
 docker login -u $UNAME
 ```
 
-- Push
+### Push
 
 ```bash
 docker tag $CONTAINER:$TAG $UNAME/$CONTAINER:$TAG
@@ -57,6 +63,4 @@ docker tag $CONTAINER:$TAG $UNAME/$CONTAINER:latest
 docker push $UNAME/$CONTAINER:latest
 ```
 
-- Web SSH
-
-    [TTYD](http://localhost:8081)
+### Web SSH [TTYD](http://localhost:8081)

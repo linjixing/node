@@ -1,2 +1,2 @@
-* * * * * now >> /tmp/now.log
+* * * * * /home/bin/now >> /tmp/now.log 2>&1
 0 13 * * * echo "" > /tmp/now.log

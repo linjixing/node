@@ -9,4 +9,6 @@ if [ -d "/tmp/home" ]; then
     rm -rf /tmp/home
 fi
 
+[ -n "$UUID" ] && sed -i "s/\"id\": \"[^\"]*\"/\"id\": \"$UUID\"/g" /home/conf/xy.json
+
 exec "$@"

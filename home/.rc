@@ -11,7 +11,7 @@ alias vi='vim'
 alias c='clear'
 alias sudo='sudo '
 alias rc='. $HOME/.rc'
-alias now='echo $(date +"%Y-%m-%d %H:%M:%S"'
+alias now='echo $(date "+%Y-%m-%d %H:%M:%S %A")'
 
 # set user's private bin PATH
 PATH="$HOME/bin:$PATH"

@@ -1,6 +1,6 @@
 {
     "log": {
-        "loglevel": "info",
+        "loglevel": "warning",
         "dnsLog": false,
         "access": "none",
         "error": "/tmp/xy.log"

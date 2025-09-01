@@ -1,13 +1,65 @@
 #!/usr/bin/env sh
 
 umask 002
-
+chown root:root /home && chmod 775 /home
 echo '[ -f "/home/.rc" ] && . /home/.rc' >> /root/.bashrc
 
-for dir in bin conf logs www; do [ -d "/home/$dir" ] || mkdir "/home/$dir"; done
+[ -z "$PASSWD" ] && PASSWD="password"
 
-[ -d "/tmp/home" ] && mv /tmp/home/.rc /home/ && mv /tmp/home/bin/* /home/bin/ && mv /tmp/home/conf/* /home/conf/ && mv /tmp/home/www/* /home/www/ && rm -rf /tmp/home
+if [ -z "$USER" ]; then
+    USER="root"
+    HOME="/root"
+    echo "root:$PASSWD" | chpasswd
+else
+    HOME="/home/$USER"
+    id -u "$USER" &>/dev/null || useradd -m -d "$HOME" -s /bin/bash $USER && chown $USER:$USER $HOME && chmod 755 $HOME
+    [ -f "$HOME/.bashrc" ] || touch "$HOME/.bashrc" && chmod 644 "$HOME/.bashrc" && chown $USER:$USER "$HOME/.bashrc"
+    grep -qF '[ -f "/home/.rc" ] && . /home/.rc' "$HOME/.bashrc" || echo '[ -f "/home/.rc" ] && . /home/.rc' >> "$HOME/.bashrc"
+    [ -f "$HOME/.rc" ] || echo '# Set your private run commands here, then run the `rc` command' > "$HOME/.rc" && chmod 644 "$HOME/.rc" && chown $USER:$USER "$HOME/.rc"
+fi
 
-[ -n "$UUID" ] && sed -i "s/\"id\": \"[^\"]*\"/\"id\": \"$UUID\"/g" /home/conf/xy.json
+for dir in bin conf supervisor.d www logs; do [ -d "/home/$dir" ] || mkdir "/home/$dir"; done
+
+[ -d "/tmp/home" ] && mv /tmp/home/.rc /home/ && mv /tmp/home/bin/* /home/bin/ && mv /tmp/home/conf/* /home/conf/ && mv /tmp/home/supervisor.d/* /home/supervisor.d/ && mv /tmp/home/www/* /home/www/ && rm -rf /tmp/home
+
+cat > /home/supervisor.d/td.conf << EOF
+[program:td]
+umask=002
+command=td -p 8081 -t enableTrzsz=true -c $USER:$PASSWD -W bash
+environment=HOME="$HOME",USER="$USER",LOGNAME="$USER"
+directory=$HOME
+autostart=true
+autorestart=true
+redirect_stderr=true
+stdout_logfile=/tmp/td.log
+stdout_logfile_maxbytes=3MB
+stdout_logfile_backups=2
+user=$USER
+EOF
+
+[ -n "$UUID" ] && cat /home/conf/xy | sed "s/UUID/$UUID/g" > /home/conf/xy.json && \
+cat > /home/supervisor.d/xy.conf << EOF
+[program:xy]
+command=xy -c /home/conf/xy.json
+autostart=true
+autorestart=true
+redirect_stderr=true
+stdout_logfile_maxbytes=3MB
+stdout_logfile_backups=2
+stdout_logfile=/tmp/xy.log
+user=root
+EOF
+
+[ -n "$TOKEN" ] && cat > /home/supervisor.d/cf.conf << EOF
+[program:cf]
+command=cf tunnel --no-autoupdate run --token $TOKEN
+autostart=true
+autorestart=true
+redirect_stderr=true
+stdout_logfile=/tmp/cf.log
+stdout_logfile_maxbytes=3MB
+stdout_logfile_backups=2
+user=root
+EOF
 
 exec "$@"

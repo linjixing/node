@@ -13,6 +13,7 @@ if [ -z "$USER" ]; then
 else
     HOME="/home/$USER"
     id -u "$USER" &>/dev/null || useradd -m -d "$HOME" -s /bin/bash $USER && chown $USER:$USER $HOME && chmod 755 $HOME
+    echo "$USER:$PASSWD" | chpasswd
     [ -f "$HOME/.bashrc" ] || touch "$HOME/.bashrc" && chmod 644 "$HOME/.bashrc" && chown $USER:$USER "$HOME/.bashrc"
     grep -qF '[ -f "/home/.rc" ] && . /home/.rc' "$HOME/.bashrc" || echo '[ -f "/home/.rc" ] && . /home/.rc' >> "$HOME/.bashrc"
     [ -f "$HOME/.rc" ] || echo '# Set your private run commands here, then run the `rc` command' > "$HOME/.rc" && chmod 644 "$HOME/.rc" && chown $USER:$USER "$HOME/.rc"
@@ -37,16 +38,15 @@ stdout_logfile_backups=2
 user=$USER
 EOF
 
-[ -n "$UUID" ] && cat /home/conf/xy | sed "s/UUID/$UUID/g" > /home/conf/xy.json && \
-cat > /home/supervisor.d/xy.conf << EOF
+[ -n "$UUID" ] && cat /home/conf/xy | sed "s/UUID/$UUID/g" > /home/conf/xy.json && cat > /home/supervisor.d/xy.conf << EOF
 [program:xy]
 command=xy -c /home/conf/xy.json
 autostart=true
 autorestart=true
 redirect_stderr=true
+stdout_logfile=/tmp/xy.log
 stdout_logfile_maxbytes=3MB
 stdout_logfile_backups=2
-stdout_logfile=/tmp/xy.log
 user=root
 EOF
 

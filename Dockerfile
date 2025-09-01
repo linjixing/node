@@ -1,4 +1,4 @@
-FROM linjixing/ubuntu:25.10
+FROM linjixing/ubuntu:22.04
 
 COPY init /usr/bin/init
 

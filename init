@@ -12,7 +12,7 @@ if [ -z "$USER" ]; then
     echo "root:$PASSWD" | chpasswd
 else
     HOME="/home/$USER"
-    id -u "$USER" &>/dev/null || useradd -m -d "$HOME" -s /bin/bash $USER && chown $USER:$USER $HOME && chmod 755 $HOME
+    getent passwd $USER > /dev/null || (useradd -m -d "$HOME" -s /bin/bash $USER && chown $USER:$USER $HOME && chmod 755 $HOME)
     echo "$USER:$PASSWD" | chpasswd
     [ -f "$HOME/.bashrc" ] || touch "$HOME/.bashrc" && chmod 644 "$HOME/.bashrc" && chown $USER:$USER "$HOME/.bashrc"
     grep -qF '[ -f "/home/.rc" ] && . /home/.rc' "$HOME/.bashrc" || echo '[ -f "/home/.rc" ] && . /home/.rc' >> "$HOME/.bashrc"

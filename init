@@ -5,15 +5,16 @@ chown root:root /home && chmod 775 /home
 echo '[ -f "/home/.rc" ] && . /home/.rc' >> /root/.bashrc
 
 [ -z "$PASSWD" ] && PASSWD="password"
+echo "root:$PASSWD" | chpasswd
 
 if [ -z "$USER" ]; then
     USER="root"
     HOME="/root"
-    echo "root:$PASSWD" | chpasswd
 else
     HOME="/home/$USER"
-    getent passwd $USER > /dev/null || (useradd -m -d "$HOME" -s /bin/bash $USER && chown $USER:$USER $HOME && chmod 755 $HOME)
-    echo "$USER:$PASSWD" | chpasswd
+    getent passwd $USER > /dev/null || useradd -m -d "$HOME" -s /bin/bash -G root,sudo $USER
+    echo "$USER:$PASSWD" | chpasswd && chown $USER:$USER $HOME && chmod 700 $HOME
+    [ -f "/etc/sudoers.d/$USER" ] || echo "$USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USER && chmod 440 /etc/sudoers.d/$USER
     [ -f "$HOME/.bashrc" ] || touch "$HOME/.bashrc" && chmod 644 "$HOME/.bashrc" && chown $USER:$USER "$HOME/.bashrc"
     grep -qF '[ -f "/home/.rc" ] && . /home/.rc' "$HOME/.bashrc" || echo '[ -f "/home/.rc" ] && . /home/.rc' >> "$HOME/.bashrc"
     [ -f "$HOME/.rc" ] || echo '# Set your private run commands here, then run the `rc` command' > "$HOME/.rc" && chmod 644 "$HOME/.rc" && chown $USER:$USER "$HOME/.rc"

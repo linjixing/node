@@ -63,7 +63,7 @@
             }
         },
         {
-            "tag": "vmess-ws-none",
+            "tag": "vmess-ws",
             "listen": "0.0.0.0",
             "port": 8880,
             "protocol": "vmess",
@@ -92,6 +92,17 @@
         }
     ],
     "outbounds": [
+        {
+            "tag": "direct",
+            "protocol": "freedom",
+            "settings": {
+                "domainStrategy": "UseIP"
+            }
+        },
+        {
+            "tag": "block",
+            "protocol": "blackhole"
+        },
         {
             "tag": "force-to-ip",
             "protocol": "freedom",

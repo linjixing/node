@@ -65,4 +65,6 @@ EOF
 
 [ -f "/etc/supervisord.conf" ] || ln -snf /home/conf/supervisord.conf /etc/supervisord.conf
 
+[ -f "/home/conf/crontab.conf" ] && crontab /home/conf/crontab.conf
+
 exec "$@"

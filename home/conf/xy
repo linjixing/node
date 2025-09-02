@@ -1,6 +1,8 @@
 {
     "log": {
-        "loglevel": "none"
+        "loglevel": "none",
+        "access": "none",
+        "error": "none"
     },
     "dns": {
         "servers": [

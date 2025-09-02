@@ -12,6 +12,7 @@ alias c='clear'
 alias sudo='sudo '
 alias rc='. $HOME/.rc'
 alias now='echo $(date "+%Y-%m-%d %H:%M:%S %A")'
+alias mem='ps aux | awk '\''{sum += $6} END {print "内存使用: " int(sum/1024) " MB"}'\'''
 
 # set user's private bin PATH
 PATH="$HOME/bin:$PATH"

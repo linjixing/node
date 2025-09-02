@@ -26,8 +26,8 @@ UNAME="linjixing"
 PASSWD="password"
 CONTAINER="node"
 TAG="25.8.25"
-HTTP_PORT="8080:8080"
-TTYD_PORT="8081:8081"
+HTTP_PORT="0.0.0.0:8080:8080"
+TTYD_PORT="0.0.0.0:8081:8081"
 ```
 
 ### Build

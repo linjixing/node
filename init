@@ -63,4 +63,6 @@ stdout_logfile_backups=2
 user=root
 EOF
 
+ln -snf /home/conf/supervisord.conf /etc/supervisord.conf
+
 exec "$@"

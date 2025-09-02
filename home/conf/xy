@@ -1,9 +1,6 @@
 {
     "log": {
-        "loglevel": "warning",
-        "dnsLog": false,
-        "access": "none",
-        "error": "/tmp/xy.log"
+        "loglevel": "none"
     },
     "dns": {
         "servers": [
@@ -26,7 +23,7 @@
     "inbounds": [
         {
             "tag": "vless-xhttp-reality",
-            "listen": "127.0.0.1",
+            "listen": "0.0.0.0",
             "port": 8443,
             "protocol": "vless",
             "settings": {

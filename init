@@ -2,7 +2,7 @@
 
 umask 002
 chown root:root /home && chmod 775 /home
-echo '[ -f "/home/.rc" ] && . /home/.rc' >> /root/.bashrc
+grep -qF '[ -f "/home/.rc" ] && . /home/.rc' "/root/.bashrc" || echo '[ -f "/home/.rc" ] && . /home/.rc' >> /root/.bashrc
 
 [ -z "$PASSWD" ] && PASSWD="password"
 echo "root:$PASSWD" | chpasswd

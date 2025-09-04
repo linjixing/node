@@ -10,22 +10,10 @@
             "8.8.8.8"
         ]
     },
-    "routing": {
-        "domainStrategy": "AsIs",
-        "rules": [
-            {
-                "type": "field",
-                "domain": [
-                    "v.com"
-                ],
-                "outboundTag": "force-to-ip"
-            }
-        ]
-    },
     "inbounds": [
         {
             "tag": "vless-xhttp-reality",
-            "listen": "0.0.0.0",
+            "listen": "127.0.0.1",
             "port": 8443,
             "protocol": "vless",
             "settings": {
@@ -64,7 +52,7 @@
         },
         {
             "tag": "vless-ws",
-            "listen": "0.0.0.0",
+            "listen": "127.0.0.1",
             "port": 8880,
             "protocol": "vless",
             "settings": {
@@ -95,21 +83,11 @@
     "outbounds": [
         {
             "tag": "direct",
-            "protocol": "freedom",
-            "settings": {
-                "domainStrategy": "UseIP"
-            }
+            "protocol": "freedom"
         },
         {
             "tag": "block",
             "protocol": "blackhole"
-        },
-        {
-            "tag": "force-to-ip",
-            "protocol": "freedom",
-            "settings": {
-                "redirect": "127.0.0.1:0"
-            }
         }
     ]
 }

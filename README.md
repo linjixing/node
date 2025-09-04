@@ -5,7 +5,7 @@
 ```bash
 git init
 git add .
-git commit -m "init node"
+git commit -m "node"
 git branch -M main
 git remote add origin https://github.com/linjixing/node.git
 git push -u origin main
@@ -25,7 +25,7 @@ git clone https://github.com/linjixing/node.git
 UNAME="linjixing"
 PASSWD="password"
 CONTAINER="node"
-TAG="25.8.25"
+TAG="22.04"
 HTTP_PORT="0.0.0.0:8080:8080"
 TTYD_PORT="0.0.0.0:8081:8081"
 ```

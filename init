@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 
 [ -z "$PASSWD" ] && PASSWD="password"
-[ -z "$WWW_PORT" ] && WWW_PORT=8080
-[ -z "$TD_PORT" ] && TD_PORT=8081
+[ -z "$HTTP_PORT" ] && HTTP_PORT=8080
+[ -z "$TTYD_PORT" ] && TTYD_PORT=8081
 
 umask 002
 chown root:root /home && chmod 775 /home
@@ -25,7 +25,7 @@ fi
 
 cat > /home/supervisor.d/www.conf << EOF
 [program:www]
-command=python3 -m http.server --bind 0.0.0.0 $WWW_PORT --directory /home/www
+command=python3 -m http.server --bind 0.0.0.0 $HTTP_PORT --directory /home/www
 autostart=true
 autorestart=true
 redirect_stderr=true
@@ -38,7 +38,7 @@ EOF
 cat > /home/supervisor.d/td.conf << EOF
 [program:td]
 umask=002
-command=td -p $TD_PORT -t enableTrzsz=true -c $USER:$PASSWD -W bash
+command=td -p $TTYD_PORT -t enableTrzsz=true -c $USER:$PASSWD -W bash
 environment=HOME="$HOME",USER="$USER",LOGNAME="$USER"
 directory=$HOME
 autostart=true

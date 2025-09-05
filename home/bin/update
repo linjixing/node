@@ -43,7 +43,7 @@ instance_name = "$HOSTNAME"
 dhcp = false
 ipv4 = "$ET_IPV4"
 listeners = ["ws://0.0.0.0:$ET_PORT/"]
-socks5_proxy = "socks5://0.0.0.0:$SOCK_PORT"
+socks5_proxy = "socks5://127.0.0.1:$SOCK_PORT"
 
 [network_identity]
 network_name = "et"
@@ -175,5 +175,17 @@ stdout_logfile_backups=2
 user=root
 EOF
 fi
+
+[ -n "$TOKEN" ] && cat > /home/supervisor.d/cf.conf << EOF
+[program:cf]
+command=cf tunnel --no-autoupdate run --token $TOKEN
+autostart=true
+autorestart=true
+redirect_stderr=true
+stdout_logfile=/tmp/cf.log
+stdout_logfile_maxbytes=3MB
+stdout_logfile_backups=2
+user=root
+EOF
 
 exec "$@"

@@ -7,7 +7,8 @@
 [ -z "$HTTP_PORT" ] && HTTP_PORT=8080
 [ -z "$TTYD_PORT" ] && TTYD_PORT=8081
 [ -z "$ET_PORT" ] && ET_PORT=8082
-[ -z "$SOCK_PORT" ] && SOCK_PORT=8088
+[ -z "$TCP_PORT" ] && TCP_PORT=8443
+[ -z "$WS_PORT" ] && WS_PORT=8880
 
 cat > /home/supervisor.d/http.conf << EOF
 [program:http]
@@ -43,7 +44,6 @@ instance_name = "$HOSTNAME"
 dhcp = false
 ipv4 = "$ET_IPV4"
 listeners = ["ws://0.0.0.0:$ET_PORT/"]
-socks5_proxy = "socks5://127.0.0.1:$SOCK_PORT"
 
 [network_identity]
 network_name = "et"
@@ -60,6 +60,31 @@ autostart=true
 autorestart=true
 redirect_stderr=true
 stdout_logfile=/tmp/et.log
+stdout_logfile_maxbytes=3MB
+stdout_logfile_backups=2
+user=root
+EOF
+fi
+
+if [ -n "$FS_ADDR" ] && [ -n "$FS_PORT" ]; then
+    cat > /home/conf/fc.toml << EOF
+serverAddr = "$FS_ADDR"
+serverPort = $FS_PORT
+
+[[proxies]]
+name = "reality-$HOSTNAME"
+type = "stcp"
+secretKey = "$PASSWD"
+localPort = $TCP_PORT
+EOF
+
+    cat > /home/supervisor.d/fc.conf << EOF
+[program:fc]
+command=fc -c /home/conf/fc.toml
+autostart=true
+autorestart=true
+redirect_stderr=true
+stdout_logfile=/tmp/fc.log
 stdout_logfile_maxbytes=3MB
 stdout_logfile_backups=2
 user=root
@@ -83,8 +108,8 @@ if [ -n "$UUID" ]; then
     "inbounds": [
         {
             "tag": "vless-xhttp-reality",
-            "listen": "127.0.0.1",
-            "port": 8443,
+            "listen": "0.0.0.0",
+            "port": $TCP_PORT,
             "protocol": "vless",
             "settings": {
                 "clients": [
@@ -123,7 +148,7 @@ if [ -n "$UUID" ]; then
         {
             "tag": "vless-ws",
             "listen": "0.0.0.0",
-            "port": 8880,
+            "port": $WS_PORT,
             "protocol": "vless",
             "settings": {
                 "clients": [

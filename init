@@ -1,14 +1,12 @@
 #!/usr/bin/env sh
 
 [ -z "$PASSWD" ] && PASSWD="password"
-[ -z "$HTTP_PORT" ] && HTTP_PORT=8080
-[ -z "$TTYD_PORT" ] && TTYD_PORT=8081
 
 umask 002
 chown root:root /home && chmod 775 /home
 grep -qF '[ -f "/home/.rc" ] && . /home/.rc' "/root/.bashrc" || echo '[ -f "/home/.rc" ] && . /home/.rc' >> /root/.bashrc
 echo "root:$PASSWD" | chpasswd
-[ -d "/tmp/home" ] && ls -AF /tmp/home | while read name; do [ -f "/tmp/home/$name" ] && mv /tmp/home/$name /home/ || mkdir /home/$name && mv /tmp/home/$name/* /home/$name/; done && rm -rf /tmp/home
+[ -d "/tmp/home" ] && mv /tmp/home/.rc /home/.rc && ls -AF /tmp/home | while read dir; do [ -d "/home/$dir" ] || mkdir /home/$dir && mv /tmp/home/$dir/* /home/$dir/; done && rm -rf /tmp/home
 
 if [ -z "$USER" ]; then
     USER="root"
@@ -23,59 +21,10 @@ else
     [ -f "$HOME/.rc" ] || echo '# Set your private run commands here, then run the `rc` command' > "$HOME/.rc" && chmod 644 "$HOME/.rc" && chown $USER:$USER "$HOME/.rc"
 fi
 
-cat > /home/supervisor.d/www.conf << EOF
-[program:www]
-command=python3 -m http.server --bind 0.0.0.0 $HTTP_PORT --directory /home/www
-autostart=true
-autorestart=true
-redirect_stderr=true
-stdout_logfile=/tmp/www.log
-stdout_logfile_maxbytes=3MB
-stdout_logfile_backups=2
-user=root
-EOF
-
-cat > /home/supervisor.d/td.conf << EOF
-[program:td]
-umask=002
-command=td -p $TTYD_PORT -t enableTrzsz=true -c $USER:$PASSWD -W bash
-environment=HOME="$HOME",USER="$USER",LOGNAME="$USER"
-directory=$HOME
-autostart=true
-autorestart=true
-redirect_stderr=true
-stdout_logfile=/tmp/td.log
-stdout_logfile_maxbytes=3MB
-stdout_logfile_backups=2
-user=$USER
-EOF
-
-[ -n "$UUID" ] && cat /home/conf/xy | sed "s/UUID/$UUID/g" > /home/conf/xy.json && cat > /home/supervisor.d/xy.conf << EOF
-[program:xy]
-command=xy -c /home/conf/xy.json
-autostart=true
-autorestart=true
-redirect_stderr=true
-stdout_logfile=/tmp/xy.log
-stdout_logfile_maxbytes=3MB
-stdout_logfile_backups=2
-user=root
-EOF
-
-[ -n "$TOKEN" ] && cat > /home/supervisor.d/cf.conf << EOF
-[program:cf]
-command=cf tunnel --no-autoupdate run --token $TOKEN
-autostart=true
-autorestart=true
-redirect_stderr=true
-stdout_logfile=/tmp/cf.log
-stdout_logfile_maxbytes=3MB
-stdout_logfile_backups=2
-user=root
-EOF
-
 [ -f "/etc/supervisord.conf" ] || ln -snf /home/conf/supervisord.conf /etc/supervisord.conf
 
 [ -f "/home/conf/crontab.conf" ] && crontab /home/conf/crontab.conf
+
+update
 
 exec "$@"

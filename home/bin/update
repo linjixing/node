@@ -11,7 +11,7 @@
 
 cat > /home/supervisor.d/http.conf << EOF
 [program:http]
-command=python3 -m http.server --bind 0.0.0.0 $HTTP_PORT --directory /home/http
+command=/usr/bin/python3 -m http.server --bind 0.0.0.0 $HTTP_PORT --directory /home/http
 autostart=true
 autorestart=true
 redirect_stderr=true
@@ -83,7 +83,7 @@ if [ -n "$UUID" ]; then
     "inbounds": [
         {
             "tag": "vless-xhttp-reality",
-            "listen": "0.0.0.0",
+            "listen": "127.0.0.1",
             "port": 8443,
             "protocol": "vless",
             "settings": {

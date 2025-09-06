@@ -7,6 +7,7 @@
 [ -z "$HTTP_PORT" ] && HTTP_PORT=8080
 [ -z "$TTYD_PORT" ] && TTYD_PORT=8081
 [ -z "$ET_PORT" ] && ET_PORT=8082
+[ -z "$XHTTP_PORT" ] && XHTTP_PORT=8083
 [ -z "$TCP_PORT" ] && TCP_PORT=8443
 [ -z "$WS_PORT" ] && WS_PORT=8880
 
@@ -75,6 +76,12 @@ serverPort = $FS_PORT
 name = "reality-$HOSTNAME"
 type = "stcp"
 secretKey = "$PASSWD"
+localPort = $XHTTP_PORT
+
+[[proxies]]
+name = "tcp-$HOSTNAME"
+type = "stcp"
+secretKey = "$PASSWD"
 localPort = $TCP_PORT
 EOF
 
@@ -109,7 +116,7 @@ if [ -n "$UUID" ]; then
         {
             "tag": "vless-xhttp-reality",
             "listen": "0.0.0.0",
-            "port": $TCP_PORT,
+            "port": $XHTTP_PORT,
             "protocol": "vless",
             "settings": {
                 "clients": [
@@ -163,6 +170,32 @@ if [ -n "$UUID" ]; then
                 "wsSettings": {
                     "path": "/"
                 },
+                "security": "none"
+            },
+            "sniffing": {
+                "enabled": true,
+                "destOverride": [
+                    "http",
+                    "tls",
+                    "quic"
+                ]
+            }
+        },
+        {
+            "tag": "vless-tcp",
+            "listen": "0.0.0.0",
+            "port": $TCP_PORT,
+            "protocol": "vless",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "$UUID"
+                    }
+                ],
+                "decryption": "none"
+            },
+            "streamSettings": {
+                "network": "tcp",
                 "security": "none"
             },
             "sniffing": {

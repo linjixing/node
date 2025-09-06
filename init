@@ -21,7 +21,9 @@ else
     [ -f "$HOME/.rc" ] || echo '# Set your private run commands here, then run the `rc` command' > "$HOME/.rc" && chmod 644 "$HOME/.rc" && chown $USER:$USER "$HOME/.rc"
 fi
 
-[ -f "/etc/supervisord.conf" ] || ln -snf /home/conf/supervisord.conf /etc/supervisord.conf
+[ -f "/home/cert/cli.ini" ] && ln -snf /home/cert/cli.ini /etc/letsencrypt/cli.ini
+
+[ -f "/home/conf/supervisord.conf" ] && ln -snf /home/conf/supervisord.conf /etc/supervisord.conf
 
 [ -f "/home/conf/crontab.conf" ] && crontab /home/conf/crontab.conf
 

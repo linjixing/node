@@ -6,7 +6,7 @@ umask 002
 chown root:root /home && chmod 775 /home
 grep -qF '[ -f "/home/.rc" ] && . /home/.rc' "/root/.bashrc" || echo '[ -f "/home/.rc" ] && . /home/.rc' >> /root/.bashrc
 echo "root:$PASSWD" | chpasswd
-[ -d "/tmp/home" ] && mv /tmp/home/.rc /home/.rc && ls -AF /tmp/home | while read dir; do [ -d "/home/$dir" ] || mkdir /home/$dir && mv /tmp/home/$dir/* /home/$dir/; done && rm -rf /tmp/home
+[ -d "/tmp/home" ] && ([ -f "/tmp/home/.rc" ] && mv /tmp/home/.rc /home/.rc) && ls -AF /tmp/home | while read dir; do [ -d "/home/$dir" ] || mkdir /home/$dir && mv /tmp/home/$dir/* /home/$dir/; done && rm -rf /tmp/home
 
 if [ -z "$USER" ]; then
     USER="root"
